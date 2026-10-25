@@ -1,0 +1,15 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Axiom migration</title><link rel="stylesheet" href="popup.css"></head><body>
+<header><strong>Axiom migration</strong><small>1.2.1</small></header>
+<label class="toggle">Включить процент миграций<input id="enabled" type="checkbox" role="switch"></label>
+<label class="toggle">Скрыть числа, оставить процент<input id="hideCounts" type="checkbox" role="switch"></label>
+<label class="toggle">Показывать ONE на первом токене<input id="oneBuyBadgeEnabled" type="checkbox" role="switch"></label>
+<label class="toggle">Скрывать корону у счётчика<input id="hideMigrationCrownEnabled" type="checkbox" role="switch"></label>
+<div class="preview" id="preview"><span id="previewCounts">8/50</span> <span id="previewPercent">16%</span></div>
+<label>Размер чисел и процента <output id="scaleValue"></output><input id="scale" type="range" min="0.6" max="2.5" step="0.05"></label><p>Размер, ONE и скрытие короны применяются сразу, без сохранения.</p>
+<label class="toggle">Цвет вне диапазонов<input id="baseColor" type="color"></label>
+<h2>Цветовые диапазоны</h2><p>От — включительно, до — не включительно. Для верхней границы 100% включается. Диапазоны не должны пересекаться.</p>
+<div class="range-head"><span>От, %</span><span>До, %</span><span>Цвет</span><span></span></div>
+<div id="ranges"></div><button id="add" type="button">+ Добавить диапазон</button>
+<div id="error" role="alert"></div><button id="save" type="button" class="primary">Сохранить</button><button id="reset" type="button">Вернуть исходные настройки</button>
+<footer id="status" role="status"></footer><p>Пример: 8 миграций / 50 токенов = 16%. Данные берутся со страницы Pulse, без запросов к серверу.</p>
+<script src="settings.js"></script><script src="popup.js"></script></body></html>

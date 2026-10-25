@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+
+# Local development files (not part of the published extension)
+tests/
+.claude/
