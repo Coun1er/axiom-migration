@@ -66,6 +66,7 @@
       let label=oneLabels.get(button);
       if(!showOne){if(label){label.remove();oneLabels.delete(button);}continue;}
       if(!label){label=document.createElement('span');label.className='axiom-migration-one';label.textContent='ONE';label.setAttribute('aria-hidden','true');oneLabels.set(button,label);}
+      if(settings.oneColor)label.style.color=settings.oneColor;else label.style.removeProperty('color');
       if(label.parentElement!==button)button.append(label);
     }
     for(const [button,label] of oneLabels)if(card.contains(button)&&(!showOne||!button.matches('button[class*="group/quickBuyButton"]'))){label.remove();oneLabels.delete(button);}

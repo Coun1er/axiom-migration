@@ -15,17 +15,20 @@
     const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.setAttribute('aria-label','Удалить диапазон');
     remove.addEventListener('click',()=>{row.remove();preview();});row.append(remove);$('ranges').append(row);
   }
-  function read(){return {enabled:$('enabled').checked,hideCounts:$('hideCounts').checked,oneBuyBadgeEnabled:$('oneBuyBadgeEnabled').checked,hideMigrationCrownEnabled:$('hideMigrationCrownEnabled').checked,scale:Number($('scale').value),baseColor:$('baseColor').value,
+  function read(){return {enabled:$('enabled').checked,hideCounts:$('hideCounts').checked,oneBuyBadgeEnabled:$('oneBuyBadgeEnabled').checked,oneColor:settings.oneColor,hideMigrationCrownEnabled:$('hideMigrationCrownEnabled').checked,scale:Number($('scale').value),baseColor:$('baseColor').value,
     ranges:[...$('ranges').children].map(row=>Object.fromEntries(['min','max','color'].map(k=>{const v=row.querySelector(`[data-field="${k}"]`).value;return [k,k==='color'?v:v.trim()===''?NaN:Number(v)];})))};}
   function preview(){
     const draft=read(),error=api.validateRanges(draft.ranges);$('error').textContent=error;$('status').textContent='';
     $('scaleValue').textContent=`${Math.round(draft.scale*100)}%`;
     $('preview').style.fontSize=`${12*draft.scale}px`;$('previewCounts').hidden=draft.hideCounts;
     $('previewPercent').style.color=api.colorFor(16,error?{...draft,ranges:[]}:draft);
+    $('oneColorPreview').style.color=settings.oneColor||'rgba(226,232,240,.92)';
+    $('oneColorReset').disabled=!settings.oneColor;
   }
   function paint(){
     $('enabled').checked=settings.enabled;$('hideCounts').checked=settings.hideCounts;$('oneBuyBadgeEnabled').checked=settings.oneBuyBadgeEnabled;$('hideMigrationCrownEnabled').checked=settings.hideMigrationCrownEnabled;$('scale').value=settings.scale;$('baseColor').value=settings.baseColor;
     $('ranges').replaceChildren();settings.ranges.forEach(addRow);preview();
+    $('oneColor').value=settings.oneColor||'#e2e8f0';
   }
   async function save(){
     const draft=read(),error=api.validateRanges(draft.ranges);
@@ -34,12 +37,17 @@
     catch{$('error').textContent='Не удалось сохранить настройки';}
   }
   document.addEventListener('input',preview);
-  for(const id of ['scale','oneBuyBadgeEnabled','hideMigrationCrownEnabled'])$(id).addEventListener('input',()=>{
+  for(const id of ['scale','oneBuyBadgeEnabled','hideMigrationCrownEnabled','oneColor'])$(id).addEventListener('input',()=>{
     if(!loaded)return;
     // Apply only this control: unfinished/invalid color ranges stay unsaved.
-    settings=api.normalize({...settings,[id]:id==='scale'?Number($(id).value):$(id).checked});
+    settings=api.normalize({...settings,[id]:id==='scale'?Number($(id).value):id==='oneColor'?$(id).value:$(id).checked});
     preview();
     persist({...settings}).then(()=>{$('status').textContent='Применено в Pulse';}).catch(()=>{$('error').textContent='Не удалось сохранить настройки';});
+  });
+  $('oneColorReset').addEventListener('click',()=>{
+    if(!loaded)return;
+    settings=api.normalize({...settings,oneColor:''});$('oneColor').value='#e2e8f0';preview();
+    persist({...settings}).then(()=>{$('status').textContent='Стандартный цвет ONE восстановлен';}).catch(()=>{$('error').textContent='Не удалось сохранить настройки';});
   });
   $('add').addEventListener('click',()=>{const ranges=read().ranges;const min=ranges.length?Math.max(...ranges.map(r=>r.max)):0;addRow({min:min<100?min:0,max:100,color:'#c5c7d0'});preview();});
   $('save').addEventListener('click',save);

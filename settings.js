@@ -1,5 +1,5 @@
 (() => {
-  const defaults = {enabled:true,hideCounts:false,oneBuyBadgeEnabled:true,hideMigrationCrownEnabled:true,scale:1,baseColor:'#c5c7d0',ranges:[
+  const defaults = {enabled:true,hideCounts:false,oneBuyBadgeEnabled:true,oneColor:'',hideMigrationCrownEnabled:true,scale:1,baseColor:'#c5c7d0',ranges:[
     {min:0,max:15,color:'#ff4444'}, {min:15,max:35,color:'#ff9500'},
     {min:35,max:60,color:'#ffd60a'}, {min:60,max:100,color:'#34c759'}]};
   const validColor = c => typeof c === 'string' && /^#[a-f0-9]{6}$/i.test(c);
@@ -18,6 +18,7 @@
     const ranges=Array.isArray(v.ranges) ? v.ranges.map(r=>({min:Number(r?.min),max:Number(r?.max),color:r?.color})) : defaults.ranges;
     return {enabled:v.enabled!==false,hideCounts:v.hideCounts===true,oneBuyBadgeEnabled:v.oneBuyBadgeEnabled!==false,hideMigrationCrownEnabled:v.hideMigrationCrownEnabled!==false,scale:Number.isFinite(scale)?Math.max(.6,Math.min(2.5,scale)):1,
       baseColor:validColor(v.baseColor)?v.baseColor:defaults.baseColor,
+      oneColor:validColor(v.oneColor)?v.oneColor.toLowerCase():'',
       ranges:(validateRanges(ranges)?defaults.ranges:ranges).map(r=>({...r}))};
   }
   function parse(text) {
